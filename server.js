@@ -11,7 +11,7 @@ var http = require('http');
 var mongoose = require('mongoose');
 
 // //artist class
-// var connectdb = require('./config/dbconnection.js');
+ var connectdb = require('./config/dbconnection.js');
 var routes = require('./app/webservices/customerservice.js');
 
 // //connect to mongodb
