@@ -37,6 +37,7 @@ module.exports = function (app) {
   app.use(function(req, res, next) {
 
     console.log("TOEKN");
+    console.log(process.env.database);
 
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.headers['x-access-token'];
