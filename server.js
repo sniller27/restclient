@@ -1,3 +1,4 @@
+require('dotenv/config')
 //express for middleware(static files), POST/GET methods
 var express = require('express');
 var app = express();
@@ -10,12 +11,23 @@ var http = require('http');
 //mongoose makes it easier to communicate with mongodb (requires model and schema)
 var mongoose = require('mongoose');
 
+// require('dotenv/config');
+// var dotenv = require('dotenv');
+// require('dotenv');
+// require('dotenv').config();
+// require('dotenv').config({path: __dirname + '/.env'})
+// var dotenv = require('dotenv').config({path: path.join(__dirname, '.env')})
+// 
+// 
+// var dotenv = require('dotenv');
+// dotenv.load();	
+
 // //artist class
  var connectdb = require('./config/dbconnection.js');
 var routes = require('./app/webservices/customerservice.js');
 
 // //connect to mongodb
-// connectdb();
+connectdb();
 
 /**
     USED MIDDLEWARE
@@ -34,9 +46,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 //Must be at the and, first we create our handle functions and than we start the server
 const PORT= process.env.PORT || 8080;
 var server = http.createServer(app);
-// server.listen(PORT, function(){
-//   console.log("Server listening on: http://localhost:%s", PORT);
-// });
 
 server.listen(PORT, callback => {
 	console.log("Server listening on: http://localhost:%s", PORT);

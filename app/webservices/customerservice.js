@@ -4,33 +4,79 @@ var jwt    = require('jsonwebtoken');
 
 
 var Customer = require('../model/customermodel.js');
+var Login = require('../model/loginmodel.js');
 
 
 
 
 module.exports = function (app) {
 
-  app.set('superSecret', "bananmad");
+  app.set('superSecret', process.env.tokensecret);
+
+  //REGISTER NEW USER
+  app.post('/api/register', function(req, res){
+
+    var newUser = new Login({
+      // id: 4,
+      username: req.body.username,
+      password: req.body.password,
+      
+    });
+
+    //Mongoose Save Function to save data
+    newUser.save(function(error) {
+      if (error) {
+        console.error(error);
+        res.json("error");
+      }else {
+        res.json("User registered");
+      }
+    });
+
+    //res.json("Customer added");
+
+  });
 
   //INSERT NEW ARTIST (POST)
   app.post('/api/authenticate', function(req, res){
 
-    // create a token
-        var payload = {
-          admin: true 
-        };
-        var token = jwt.sign(payload, app.get('superSecret'), {
-          expiresIn: 30 // expires in 24 hours
-        });
+  console.log("auteht");
 
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token
-        });
+    Login.findOne({'username' : req.body.username}, function(err, user) {
+      console.log("inside");
+      console.log(user);
+      if (err) throw err;
+
+      if(user){
+
+        if (user.password == req.body.password) {
+          
+          // create a token
+          var payload = {
+            admin: true 
+          };
+
+          var token = jwt.sign(payload, app.get('superSecret'), {
+            expiresIn: 30
+          });
+
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+          
+        } else {
+          res.json("nope");
+        }
+
+      }else {
+        res.json("meh");
+      }
+
+    });
 
     // res.json("post");
-
   });
 
   //route middleware to authenticate and check token
@@ -47,7 +93,7 @@ module.exports = function (app) {
     // verifies secret and checks exp
     jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
       if (err) {
-        console.log(err);
+        // console.log(err);
         //return res.json({ success: false, message: 'Failed to authenticate token.' });    
         return res.json("Your session has expired");
       } else {
@@ -122,9 +168,9 @@ module.exports = function (app) {
     var newCustomer = new Customer({
       // id: 4,
       name: req.body.name,
-      birthPlace: req.body.email,
-      birthDate: req.body.phone,
-      favoritebool: "gam"
+      email: req.body.email,
+      phone: req.body.phone,
+      
     });
     //Mongoose Save Funtktion to save data
     newCustomer.save(function(error) {
@@ -179,16 +225,16 @@ module.exports = function (app) {
  * NULLIFY WEB TOKEN (LOG OUT)
  */
 
-  // app.post('/api/deauthenticate', function(req, res){
+  app.post('/api/deauthenticate', function(req, res){
 
-  //       res.json({
-  //         success: true,
-  //         message: 'Enjoy your token!',
-  //         token: null
-  //       });
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: null
+        });
 
-  //   // res.json("post");
+    // res.json("post");
 
-  // });
+  });
 
 };

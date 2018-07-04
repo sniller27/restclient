@@ -1,23 +1,22 @@
 //mongoose makes it easier to communicate with mongodb
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
-var AutoIncrement = require('mongoose-sequence');
+// var AutoIncrement = require('mongoose-sequence');
 
 
 //making new mongoose schema
-var CustomerSchema = new mongoose.Schema({
-	id: Number,
-    name: String,
-    email: String,
-    phone: String,
+var LoginSchema = new mongoose.Schema({
+	// id: Number,
+    username: String,
+    password: String,
 });
 
-//for auto increment
-var CounterSchema = Schema({
-    _id: {type: String, required: true},
-    seq: { type: Number, default: 0 }
-});
-var counter = mongoose.model('counter', CounterSchema);
+// //for auto increment
+// var CounterSchema = Schema({
+//     _id: {type: String, required: true},
+//     seq: { type: Number, default: 0 }
+// });
+// var counter = mongoose.model('counter', CounterSchema);
 
 var entitySchema = mongoose.Schema({
     testvalue: {type: String}
@@ -35,4 +34,4 @@ var entitySchema = mongoose.Schema({
 // CustomerSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
 //use the schema for a mongoose model and export it
-module.exports = mongoose.model('Customers', CustomerSchema);
+module.exports = mongoose.model('Users', LoginSchema);
