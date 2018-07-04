@@ -46,8 +46,6 @@ module.exports = function (app) {
         }
       });
 
-      //res.json("Customer added");
-
     });
 
   });
@@ -55,16 +53,20 @@ module.exports = function (app) {
   //INSERT NEW ARTIST (POST)
   app.post('/api/authenticate', function(req, res){
 
-  console.log("auteht");
+    //sanitizing
+    var sUsername = sanitizer.escape(req.body.username);
 
-    Login.findOne({'username' : req.body.username}, function(err, user) {
+    Login.findOne({'username' : sUsername}, function(err, user) {
       console.log("inside");
       console.log(user);
       if (err) throw err;
 
       if(user){
 
-        bcrypt.compare(req.body.password, user.password, function(err, valid) {
+        //sanitizing
+        var sPassword = sanitizer.escape(req.body.password);
+
+        bcrypt.compare(sPassword, user.password, function(err, valid) {
 
           if (valid) {
           
@@ -101,10 +103,11 @@ module.exports = function (app) {
   //route middleware to authenticate and check token
   app.use(function(req, res, next) {
 
-    console.log("TOEKN");
+  //sanitizing
+  var sToken = sanitizer.escape(req.body.token);
 
   // check header or url parameters or post parameters for token
-  var token = req.body.token || req.headers['x-access-token'];
+  var token = sToken || req.headers['x-access-token'];
 
   // decode token
   if (token) {
@@ -146,11 +149,13 @@ module.exports = function (app) {
 
   //READ ALL ARTISTS (GET)
   app.get('/api/artists', function(req, res){
-    console.log(req.body.keyword);
+    
+    //sanitizing
+    var sKeyword = sanitizer.escape(req.body.keyword);
 
   // var nameparameter = req.query.name;
   // var nameparametersanitized = sanitizer.escape(nameparameter);
-    Customer.find({'name' : new RegExp(req.body.keyword, 'i')}, function(err, users) {
+    Customer.find({'name' : new RegExp(sKeyword, 'i')}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
@@ -178,16 +183,16 @@ module.exports = function (app) {
   //INSERT CUSTOMER
   app.post('/api/artist', function(req, res){
 
-    // res.send(req.body);
-    // //sanitizing
-    // var sanitizename = sanitizer.escape(req.body.name);
-    // var sanitizebplace = sanitizer.escape(req.body.birthPlace);
+    //sanitizing
+    var sName = sanitizer.escape(req.body.name);
+    var sEmail = sanitizer.escape(req.body.email);
+    var sPhone = sanitizer.escape(req.body.phone);
 
     var newCustomer = new Customer({
       // id: 4,
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
+      name: sName,
+      email: sEmail,
+      phone: sPhone,
       
     });
     //Mongoose Save Funtktion to save data
