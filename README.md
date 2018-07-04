@@ -2,5 +2,5 @@ Node.js console interface communicating with REST-API. Upgraded during project f
 
 install: npm install
 fix symbolic link: npm link
-
+start backend: nodemon server.js   ///   node server.js
 for help: cust -h

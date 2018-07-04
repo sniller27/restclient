@@ -1,10 +1,14 @@
 var path = require('path');
+//sanitizing for security
 var sanitizer = require('sanitizer');
+//for webtokens
 var jwt    = require('jsonwebtoken'); 
-
+//password hashing module/middleware
+var bcrypt = require('bcrypt');
 
 var Customer = require('../model/customermodel.js');
 var Login = require('../model/loginmodel.js');
+
 
 
 
@@ -16,24 +20,35 @@ module.exports = function (app) {
   //REGISTER NEW USER
   app.post('/api/register', function(req, res){
 
-    var newUser = new Login({
-      // id: 4,
-      username: req.body.username,
-      password: req.body.password,
+    //sanitizing
+    var sUsername = sanitizer.escape(req.body.username);
+    var sPassword = sanitizer.escape(req.body.password);
+
+    //set salt and generate hash
+    const saltRounds = 10;
+
+    bcrypt.hash(sPassword, saltRounds, function(err, hash) {
       
-    });
+      var newUser = new Login({
+        // id: 4,
+        username: sUsername,
+        password: hash,
+        
+      });
 
-    //Mongoose Save Function to save data
-    newUser.save(function(error) {
-      if (error) {
-        console.error(error);
-        res.json("error");
-      }else {
-        res.json("User registered");
-      }
-    });
+      //Mongoose Save Function to save data
+      newUser.save(function(error) {
+        if (error) {
+          console.error(error);
+          res.json("error");
+        }else {
+          res.json("User registered");
+        }
+      });
 
-    //res.json("Customer added");
+      //res.json("Customer added");
+
+    });
 
   });
 
@@ -49,7 +64,9 @@ module.exports = function (app) {
 
       if(user){
 
-        if (user.password == req.body.password) {
+        bcrypt.compare(req.body.password, user.password, function(err, valid) {
+
+          if (valid) {
           
           // create a token
           var payload = {
@@ -66,9 +83,11 @@ module.exports = function (app) {
             token: token
           });
           
-        } else {
-          res.json("nope");
-        }
+          } else {
+            res.json("nope");
+          }
+
+        });
 
       }else {
         res.json("meh");
@@ -156,11 +175,10 @@ module.exports = function (app) {
 
   });
 
-  //INSERT NEW ARTIST (POST)
+  //INSERT CUSTOMER
   app.post('/api/artist', function(req, res){
 
     // res.send(req.body);
-  console.log("inside post artist");
     // //sanitizing
     // var sanitizename = sanitizer.escape(req.body.name);
     // var sanitizebplace = sanitizer.escape(req.body.birthPlace);

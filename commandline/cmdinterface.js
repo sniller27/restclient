@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 const program = require('commander');
-
 //for HTTP request (not fetch API)
 var request = require('request');
-
+//password hashing module/middleware
+var bcrypt = require('bcrypt');
 //for fetch API
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-
 //local storage
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;

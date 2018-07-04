@@ -1,4 +1,5 @@
-require('dotenv/config')
+//for use of environment variables on localhost
+require('dotenv/config');
 //express for middleware(static files), POST/GET methods
 var express = require('express');
 var app = express();
@@ -47,8 +48,14 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 const PORT= process.env.PORT || 8080;
 var server = http.createServer(app);
 
-server.listen(PORT, callback => {
+server.listen(PORT, error => {
+
+  if (error) {
+    console.error(error);
+  } else {
 	console.log("Server listening on: http://localhost:%s", PORT);
+  }
+
 });
 
 //routes

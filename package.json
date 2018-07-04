@@ -6,6 +6,7 @@
   "preferGlobal": "true",
   "bin": "./commandline/cmdinterface.js",
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "commander": "^2.15.1",
     "dotenv": "^6.0.0",
     "es6-promise": "^4.2.4",
