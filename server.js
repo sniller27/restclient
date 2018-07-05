@@ -11,28 +11,22 @@ var path = require('path');
 var http = require('http');
 //mongoose makes it easier to communicate with mongodb (requires model and schema)
 var mongoose = require('mongoose');
+//security middleware
+var helmet = require('helmet');
 
-// require('dotenv/config');
-// var dotenv = require('dotenv');
-// require('dotenv');
-// require('dotenv').config();
-// require('dotenv').config({path: __dirname + '/.env'})
-// var dotenv = require('dotenv').config({path: path.join(__dirname, '.env')})
-// 
-// 
-// var dotenv = require('dotenv');
-// dotenv.load();	
 
-// //artist class
+//artist class
  var connectdb = require('./config/dbconnection.js');
 var routes = require('./app/webservices/customerservice.js');
 
-// //connect to mongodb
+//connect to mongodb
 connectdb();
 
 /**
     USED MIDDLEWARE
 **/
+//helmet for security (does a lot of different things). should be used early in middleware stack.
+app.use(helmet());
 
 //static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -42,6 +36,8 @@ app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
+
+
 
 //Create and Start a server
 //Must be at the and, first we create our handle functions and than we start the server

@@ -5,12 +5,9 @@ var sanitizer = require('sanitizer');
 var jwt    = require('jsonwebtoken'); 
 //password hashing module/middleware
 var bcrypt = require('bcrypt');
-
+//models
 var Customer = require('../model/customermodel.js');
 var Login = require('../model/loginmodel.js');
-
-
-
 
 
 module.exports = function (app) {
@@ -165,21 +162,6 @@ module.exports = function (app) {
 
   });
 
-  //READ SPECIFIC ARTISTS (GET)
-  app.get('/api/artist', function(req, res){
-  // var nameparameter = req.query.name;
-  // // console.log(nameparameter);
-  // var nameparametersanitized = sanitizer.escape(nameparameter);
-  //   Artist.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
-  //     if (err) throw err;
-
-  //     res.json(users);
-  //   });
-  
-  res.json("lol2");
-
-  });
-
   //INSERT CUSTOMER
   app.post('/api/artist', function(req, res){
 
@@ -204,42 +186,6 @@ module.exports = function (app) {
         res.json("Customer added");
       }
     });
-
-    //res.json("Customer added");
-
-  });
-
-  //UPDATE ARTIST (PUT)
-  app.put('/api/artist', function(req, res){
-
-    // res.send(req.body);
-    // var artistid = req.body.selectedid;
-
-    // Artist.update({'id': artistid}, {
-    //     favoritebool: req.body.afavorite
-    // }, function(err, numberAffected, rawResponse) {
-    //    //handle it
-    // });
-
-    res.json("put");
-
-  });
-
-  //DELETE ARTIST
-  app.delete('/api/artist', function(req, res){
-
-    // res.send(req.body);
-    // var delid = req.body.selectedid;
-
-    //  //Mongoose Save Funtktion to save data
-    // Artist.findOneAndRemove({id : delid}, function(error) {
-    //   if (error) {
-    //     console.error(error);
-    //   }
-    // });
-    
-
-    res.json("delete");
 
   });
 
