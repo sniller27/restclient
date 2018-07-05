@@ -22,25 +22,38 @@ module.exports = app => {
     const sUsername = sanitizer.escape(username);
     const sPassword = sanitizer.escape(password);
 
-    //set salt and generate hash
-    const saltRounds = 10;
-
-    bcrypt.hash(sPassword, saltRounds, (err, hash) => {
+    Login.findOne({'username' : sUsername}, (err, user) => {
       
-      const newUser = new Login({
-        username: sUsername,
-        password: hash,
-      });
+      if (err) throw err;
 
-      //Mongoose Save Function to save data
-      newUser.save(error => {
-        if (error) {
-          console.error(error);
-          res.json("error");
-        }else {
-          res.json("User registered");
-        }
-      });
+      if(user){
+
+        res.json("Username is already taken");
+
+      }else {
+
+        //set salt and generate hash
+        const saltRounds = 10;
+
+        bcrypt.hash(sPassword, saltRounds, (err, hash) => {
+          
+          const newUser = new Login({
+            username: sUsername,
+            password: hash,
+          });
+
+          //Mongoose Save Function to save data
+          newUser.save(error => {
+            if (error) {
+              console.error(error);
+              res.json("error");
+            }else {
+              res.json("User registered");
+            }
+          });
+
+        });
+      }
 
     });
 

@@ -8,3 +8,6 @@ for help: cust -h
 learned:
 ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments
 Various security middleware used
+Debugging Node.js with node inspector
+
+Link to REST-API: https://krizorestclient.herokuapp.com/

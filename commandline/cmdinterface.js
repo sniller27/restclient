@@ -35,13 +35,12 @@ program
     const username = process.argv[3];
     const password = process.argv[4];
 
-
     request.post(
         "http://localhost:8080/api/register",
         { json: { username: username, password: password } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
-                console.log("User registered");
+                console.log(body);
             }else {
                 console.log("Something went wrong");
             }
