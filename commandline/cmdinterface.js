@@ -21,7 +21,8 @@ if (typeof localStorage === "undefined" || localStorage === null) {
    * Variables
    */
 
-  const UrlAPI = "http://localhost:8080/api";
+  // const UrlAPI = "http://localhost:8080/api";
+  const UrlAPI = "https://krizorestclient.herokuapp.com/api";
   let feedback;
 
 

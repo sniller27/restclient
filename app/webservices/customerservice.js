@@ -155,7 +155,8 @@ module.exports = app => {
 
   //READ ALL CUSTOMERS
   app.get('/api/customers', (req, res) => {
-    
+    console.log('halloj');
+    console.log(process.env.NODE_ENV);
     let {keyword} = req.body;
 
     //sanitizing

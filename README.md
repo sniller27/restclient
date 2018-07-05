@@ -9,5 +9,6 @@ learned:
 ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments, template literals
 Various security middleware used
 Debugging Node.js with node inspector
+Setting token-based authentication
 
 Link to REST-API: https://krizorestclient.herokuapp.com/
