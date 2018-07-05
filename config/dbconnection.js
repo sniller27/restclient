@@ -1,33 +1,29 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-module.exports = function () { 
+module.exports = () => { 
 
 	
-	var URLmongodb = process.env.database;
+	const URLmongodb = process.env.database;
 	
 
 	//Mongoose Connection
-	mongoose.connect(URLmongodb, function(err){
+	mongoose.connect(URLmongodb, err => {
 		// console.log(err);
 	}); // connect to our mongoDB database (uncomment after you enter in your own credentials in config/db.js)
 
-	var db = mongoose.connection;
+	const db = mongoose.connection;
 	db.on("error", console.error.bind(console, "connection error"));
 
-	db.once("open", function (callback) {
+	db.once("open", err => {
 	  console.log("Connection succeeded.");
 	});
 
-	db.on('disconnected', function () {  
-	  console.log('Mongoose default connection disconnected'); 
-	});
+	// db.on('disconnected', err => {  
+	//   console.log('Mongoose default connection disconnected'); 
+	// });
 
-	db.on('SIGINT', function () {  
-	  console.log('SIGINT'); 
-	});
-
-	// db.once("open", callback => {
-	// 	console.log(success);
+	// db.on('SIGINT', err => {  
+	//   console.log('SIGINT'); 
 	// });
 
 };
