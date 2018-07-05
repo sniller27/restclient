@@ -32,6 +32,13 @@ app.use(helmet());
 // security: Sets header "Referrer-Policy: same-origin".
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 
+// security: CSP header
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"]
+  }
+}));
+
 //static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
