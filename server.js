@@ -25,8 +25,12 @@ connectdb();
 /**
     USED MIDDLEWARE
 **/
+
 //helmet for security (does a lot of different things). should be used early in middleware stack.
 app.use(helmet());
+
+// security: Sets header "Referrer-Policy: same-origin".
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 
 //static files
 app.use('/public', express.static(path.join(__dirname, 'public')));
@@ -38,8 +42,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 
-
-//Create and Start a server
+/**
+ *  CONFIGURE AND START SERVER
+ */
 //Must be at the and, first we create our handle functions and than we start the server
 const PORT= process.env.PORT || 8080;
 var server = http.createServer(app);
@@ -54,5 +59,5 @@ server.listen(PORT, error => {
 
 });
 
-//routes
+//routes for API
 routes(app);
