@@ -22,7 +22,13 @@ module.exports = app => {
     const sUsername = sanitizer.escape(username);
     const sPassword = sanitizer.escape(password);
 
-    Login.findOne({'username' : sUsername}, (err, user) => {
+
+    if(typeof JSON.stringify(sUsername) === "undefined" || typeof JSON.stringify(sPassword) === "undefined"){
+      
+      res.json("All values must be entered");
+
+    }else {
+      Login.findOne({'username' : sUsername}, (err, user) => {
       
       if (err) throw err;
 
@@ -56,6 +62,9 @@ module.exports = app => {
       }
 
     });
+    }
+    
+    
 
   });
 
@@ -164,29 +173,38 @@ module.exports = app => {
   //INSERT CUSTOMER
   app.post('/api/artist', (req, res) => {
 
-    let {name, email, phone} = req.body;
+      let {name, email, phone} = req.body;
 
-    //sanitizing
-    const sName = sanitizer.escape(name);
-    const sEmail = sanitizer.escape(email);
-    const sPhone = sanitizer.escape(phone);
+      //sanitizing
+      const sName = sanitizer.escape(name);
+      const sEmail = sanitizer.escape(email);
+      const sPhone = sanitizer.escape(phone);
 
-    const newCustomer = new Customer({
-      name: sName,
-      email: sEmail,
-      phone: sPhone,
-    });
+    if(typeof JSON.stringify(sName) === "undefined" || typeof JSON.stringify(sEmail) === "undefined" || typeof JSON.stringify(sPhone) === "undefined"){
+      
+      res.json("All values must be entered");
+      
+    }else {
 
-    //Mongoose Save Funtktion to save data
-    newCustomer.save(error => {
-      if (error) {
-        console.error(error);
-        res.json("error");
-      }else {
-        res.json("Customer added");
-      }
+      const newCustomer = new Customer({
+        name: sName,
+        email: sEmail,
+        phone: sPhone,
+      });
 
-    });
+      //Mongoose Save Funtktion to save data
+      newCustomer.save(error => {
+        if (error) {
+          console.error(error);
+          res.json("error");
+        }else {
+          res.json("Customer added");
+        }
+
+      });
+    }
+
+   
 
   });
 

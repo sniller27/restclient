@@ -14,7 +14,6 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 }
 
 const link = "http://localhost:8080/api/artists";
-const urla = 'https://randomuser.me/api/?results=10'; 
 
 program 
   .version('1.0.0')
@@ -220,7 +219,13 @@ program
         { json: { keyword: searchTerm, token: localStorage.getItem("token") } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
+
+              if (body.length == 0) {
+                console.log('No results found');
+              }else {
                 console.log(body);
+              }
+
             }else {
                 console.log("Something went wrong!");
             }
