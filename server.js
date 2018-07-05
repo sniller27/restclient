@@ -1,33 +1,34 @@
 //for use of environment variables on localhost
 require('dotenv/config');
 //express for middleware(static files), POST/GET methods
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 //body parser for encoding and getting POST parameters (and maybe URL's)
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 //path for static files (core module)
-var path = require('path');
+const path = require('path');
 //http (core module)
-var http = require('http');
+const http = require('http');
 //mongoose makes it easier to communicate with mongodb (requires model and schema)
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 //security middleware: https://github.com/helmetjs/helmet
-var helmet = require('helmet');
+const helmet = require('helmet');
 //gzip compression for performance
-var compression = require('compression');
+const compression = require('compression');
 //relatively new security header (successor to hpkp)
-var expectCt = require('expect-ct');
+const expectCt = require('expect-ct');
 
 //artist class
-var connectdb = require('./config/dbconnection.js');
-var routes = require('./app/webservices/customerservice.js');
+const connectdb = require('./config/dbconnection.js');
+const routes = require('./app/webservices/customerservice.js');
 
 //connect to mongodb
 connectdb();
 
 /**
-    USED MIDDLEWARE
+    MIDDLEWARE
 **/
+
 //gzip compression for performance
 app.use(compression());
 
@@ -38,13 +39,13 @@ app.use(helmet());
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 
 // security header: hpkp (Public-Key-Pins)
-var ninetyDaysInSeconds = 7776000;
+const ninetyDaysInSeconds = 7776000;
 app.use(helmet.hpkp({
   maxAge: ninetyDaysInSeconds,
   sha256s: ['AbCdEf123=', 'ZyXwVu456=']
 }));
 
-// security header: new successor of hpkp
+// security header: expect-ct (new successor of hpkp)
 app.use(expectCt({ maxAge: 123 }));
 
 // security: CSP header
@@ -67,9 +68,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 /**
  *  CONFIGURE AND START SERVER
  */
+
 //Must be at the and, first we create our handle functions and than we start the server
 const PORT= process.env.PORT || 8080;
-var server = http.createServer(app);
+const server = http.createServer(app);
 
 server.listen(PORT, error => {
 

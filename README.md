@@ -4,3 +4,7 @@ install: npm install
 fix symbolic link: npm link
 start backend: nodemon server.js   ///   node server.js
 for help: cust -h
+
+learned:
+ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments
+Various security middleware used
