@@ -131,7 +131,7 @@ module.exports = app => {
 
     // decode token
     if (tokenCheck) {
-      console.log("token exists");
+
       // verifies secret and checks exp
       jwt.verify(tokenCheck, app.get('superSecret'), (err, decoded) => {      
         if (err) {
@@ -139,7 +139,6 @@ module.exports = app => {
           //return res.json({ success: false, message: 'Failed to authenticate token.' });    
           return res.json("Your session has expired");
         } else {
-          console.log("all good");
           // if everything is good, save to request for use in other routes
           req.decoded = decoded;  
           next();
