@@ -13,7 +13,7 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
 
-const link = "http://localhost:8080/api/artists";
+// const link = "http://localhost:8080/api/customers";
 
 program 
   .version('1.0.0')
@@ -147,7 +147,7 @@ program
 
 
     request.get(
-        "http://localhost:8080/api/artists",
+        "http://localhost:8080/api/customers",
         { json: { token: localStorage.getItem("token") } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
@@ -176,7 +176,7 @@ program
     const phone = process.argv[5];
 
     request.post(
-        "http://localhost:8080/api/artist",
+        "http://localhost:8080/api/customer",
         { json: { name: name, email: email, phone: phone, token: localStorage.getItem("token") } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
@@ -215,7 +215,7 @@ program
     // console.log(searchTerm);
 
     request.get(
-        "http://localhost:8080/api/artists",
+        "http://localhost:8080/api/customers",
         { json: { keyword: searchTerm, token: localStorage.getItem("token") } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {

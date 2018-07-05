@@ -68,7 +68,7 @@ module.exports = app => {
 
   });
 
-  //INSERT NEW ARTIST (POST)
+  //INSERT NEW CUSTOMER (POST)
   app.post('/api/authenticate', (req, res) => {
 
     let {username, password} = req.body;
@@ -154,8 +154,8 @@ module.exports = app => {
   
   });
 
-  //READ ALL ARTISTS (GET)
-  app.get('/api/artists', (req, res) => {
+  //READ ALL CUSTOMERS
+  app.get('/api/customers', (req, res) => {
     
     let {keyword} = req.body;
 
@@ -171,7 +171,7 @@ module.exports = app => {
   });
 
   //INSERT CUSTOMER
-  app.post('/api/artist', (req, res) => {
+  app.post('/api/customer', (req, res) => {
 
       let {name, email, phone} = req.body;
 

@@ -18,8 +18,9 @@ const compression = require('compression');
 //relatively new security header (successor to hpkp)
 const expectCt = require('expect-ct');
 
-//artist class
+//db connection
 const connectdb = require('./config/dbconnection.js');
+//API routes
 const routes = require('./app/webservices/customerservice.js');
 
 //connect to mongodb
@@ -83,5 +84,5 @@ server.listen(PORT, error => {
 
 });
 
-//routes for API
+//use API routes
 routes(app);
