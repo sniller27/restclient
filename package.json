@@ -8,8 +8,10 @@
   "dependencies": {
     "bcrypt": "^2.0.1",
     "commander": "^2.15.1",
+    "compression": "^1.7.2",
     "dotenv": "^6.0.0",
     "es6-promise": "^4.2.4",
+    "expect-ct": "^0.1.1",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
     "inquirer": "^6.0.0",

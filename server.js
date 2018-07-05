@@ -11,12 +11,15 @@ var path = require('path');
 var http = require('http');
 //mongoose makes it easier to communicate with mongodb (requires model and schema)
 var mongoose = require('mongoose');
-//security middleware
+//security middleware: https://github.com/helmetjs/helmet
 var helmet = require('helmet');
-
+//gzip compression for performance
+var compression = require('compression');
+//relatively new security header (successor to hpkp)
+var expectCt = require('expect-ct');
 
 //artist class
- var connectdb = require('./config/dbconnection.js');
+var connectdb = require('./config/dbconnection.js');
 var routes = require('./app/webservices/customerservice.js');
 
 //connect to mongodb
@@ -25,12 +28,24 @@ connectdb();
 /**
     USED MIDDLEWARE
 **/
+//gzip compression for performance
+app.use(compression());
 
 //helmet for security (does a lot of different things). should be used early in middleware stack.
 app.use(helmet());
 
 // security: Sets header "Referrer-Policy: same-origin".
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+
+// security header: hpkp (Public-Key-Pins)
+var ninetyDaysInSeconds = 7776000;
+app.use(helmet.hpkp({
+  maxAge: ninetyDaysInSeconds,
+  sha256s: ['AbCdEf123=', 'ZyXwVu456=']
+}));
+
+// security header: new successor of hpkp
+app.use(expectCt({ maxAge: 123 }));
 
 // security: CSP header
 app.use(helmet.contentSecurityPolicy({
