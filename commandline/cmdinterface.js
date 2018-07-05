@@ -13,12 +13,17 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
 
-const link = "http://localhost:8080/api/artists";
-const urla = 'https://randomuser.me/api/?results=10'; 
-
-program 
+  program 
   .version('1.0.0')
   .description('Client Management System');
+
+  /**
+   * Variables
+   */
+
+  const UrlAPI = "http://localhost:8080/api";
+  let feedback;
+
 
 
   /**
@@ -35,16 +40,16 @@ program
     const username = process.argv[3];
     const password = process.argv[4];
 
-
     request.post(
-        "http://localhost:8080/api/register",
+        `${UrlAPI}/register`,
         { json: { username: username, password: password } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
-                console.log("User registered");
+                feedback = body;
             }else {
-                console.log("Something went wrong");
+                feedback = "Something went wrong";
             }
+            console.log(feedback);
         }
     );
 
@@ -66,15 +71,16 @@ program
 
 
     request.post(
-        "http://localhost:8080/api/authenticate",
+        `${UrlAPI}/authenticate`,
         { json: { username: username, password: password } },
         (error, response, body) => {
             if (!error && response.statusCode == 200 && typeof body.token !== 'undefined') {
                 localStorage.setItem("token", body.token);
-                console.log("You're successfully logged in");
+                feedback = "You're successfully logged in";
             }else {
-                console.log("Wrong username and password");
+                feedback = "Wrong username and password";
             }
+            console.log(feedback);
         }
     );
 
@@ -92,20 +98,21 @@ program
   .action(a => {
 
     request.post(
-        "http://localhost:8080/api/deauthenticate",
+        `${UrlAPI}/deauthenticate`,
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
 
               if(localStorage.getItem("token") == ""){
-                console.log("You are already logged out");
+                feedback = "You are already logged out";
               }else {
                 localStorage.setItem("token", "");
-                console.log("You have been logged out");
+                feedback = "You have been logged out";
               }
 
             }else {
-                console.log("You're not logged in");
+                feedback = "You're not logged in";
             }
+            console.log(feedback);
         }
     );
 
@@ -121,42 +128,17 @@ program
   .alias('l')
   .description('cust list')
   .action(() => {
-    // prompt(questions).then(answers => addCustomer(answers));
-    // 
-    
-    // fetch(link, { headers: { "Content-Type": "application/json; charset=utf-8" }})
-    // .then(res => res.json()) // parse response as JSON (can be res.text() for plain response)
-    // .then(response => {
-    //  console.log("got it")
-    //     // here you do what you want with response
-    // })
-    // .catch(err => {
-    //     console.log("u")
-    //     alert("sorry, there are no results for your search")
-    // });
-
-    // fetch(link)
-    // .then(function(response) {
-    //     if (response.status >= 400) {
-    //         throw new Error("Bad response from server");
-    //     }
-
-    //     return response.json();
-    // })
-    // .then(function(stories) {
-    //     console.log(stories);
-    // });
-
 
     request.get(
-        "http://localhost:8080/api/artists",
+        `${UrlAPI}/customers`,
         { json: { token: localStorage.getItem("token") } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
-                console.log(body);
+                feedback = body;
             }else {
-                console.log("Something went wrong!");
+                feedback = "Something went wrong!";
             }
+            console.log(feedback);
         }
     );
 
@@ -178,14 +160,15 @@ program
     const phone = process.argv[5];
 
     request.post(
-        "http://localhost:8080/api/artist",
+        `${UrlAPI}/customer`,
         { json: { name: name, email: email, phone: phone, token: localStorage.getItem("token") } },
         (error, response, body) => {
             if (!error && response.statusCode == 200) {
-                console.log(body);
+                feedback = body;
             }else {
-                console.log("Something went wrong!");
+                feedback = "Something went wrong!";
             }
+            console.log(feedback);
         }
     );
 
@@ -217,14 +200,21 @@ program
     // console.log(searchTerm);
 
     request.get(
-        "http://localhost:8080/api/artists",
+        `${UrlAPI}/customers`,
         { json: { keyword: searchTerm, token: localStorage.getItem("token") } },
         (error, response, body) => {
+
             if (!error && response.statusCode == 200) {
-                console.log(body);
+
+              feedback = (body.length == 0) ? "No results found" : body;
+
             }else {
-                console.log("Something went wrong!");
+
+              feedback = "Something went wrong!";
+            
             }
+            
+            console.log(feedback);
         }
     );
 

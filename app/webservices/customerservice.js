@@ -22,31 +22,53 @@ module.exports = app => {
     const sUsername = sanitizer.escape(username);
     const sPassword = sanitizer.escape(password);
 
-    //set salt and generate hash
-    const saltRounds = 10;
 
-    bcrypt.hash(sPassword, saltRounds, (err, hash) => {
+    if(typeof JSON.stringify(sUsername) === "undefined" || typeof JSON.stringify(sPassword) === "undefined"){
       
-      const newUser = new Login({
-        username: sUsername,
-        password: hash,
-      });
+      res.json("All values must be entered");
 
-      //Mongoose Save Function to save data
-      newUser.save(error => {
-        if (error) {
-          console.error(error);
-          res.json("error");
-        }else {
-          res.json("User registered");
-        }
-      });
+    }else {
+      Login.findOne({'username' : sUsername}, (err, user) => {
+      
+      if (err) throw err;
+
+      if(user){
+
+        res.json("Username is already taken");
+
+      }else {
+
+        //set salt and generate hash
+        const saltRounds = 10;
+
+        bcrypt.hash(sPassword, saltRounds, (err, hash) => {
+          
+          const newUser = new Login({
+            username: sUsername,
+            password: hash,
+          });
+
+          //Mongoose Save Function to save data
+          newUser.save(error => {
+            if (error) {
+              console.error(error);
+              res.json("error");
+            }else {
+              res.json("User registered");
+            }
+          });
+
+        });
+      }
 
     });
+    }
+    
+    
 
   });
 
-  //INSERT NEW ARTIST (POST)
+  //INSERT NEW CUSTOMER (POST)
   app.post('/api/authenticate', (req, res) => {
 
     let {username, password} = req.body;
@@ -109,7 +131,7 @@ module.exports = app => {
 
     // decode token
     if (tokenCheck) {
-      console.log("token exists");
+
       // verifies secret and checks exp
       jwt.verify(tokenCheck, app.get('superSecret'), (err, decoded) => {      
         if (err) {
@@ -117,7 +139,6 @@ module.exports = app => {
           //return res.json({ success: false, message: 'Failed to authenticate token.' });    
           return res.json("Your session has expired");
         } else {
-          console.log("all good");
           // if everything is good, save to request for use in other routes
           req.decoded = decoded;  
           next();
@@ -132,8 +153,8 @@ module.exports = app => {
   
   });
 
-  //READ ALL ARTISTS (GET)
-  app.get('/api/artists', (req, res) => {
+  //READ ALL CUSTOMERS
+  app.get('/api/customers', (req, res) => {
     
     let {keyword} = req.body;
 
@@ -149,31 +170,40 @@ module.exports = app => {
   });
 
   //INSERT CUSTOMER
-  app.post('/api/artist', (req, res) => {
+  app.post('/api/customer', (req, res) => {
 
-    let {name, email, phone} = req.body;
+      let {name, email, phone} = req.body;
 
-    //sanitizing
-    const sName = sanitizer.escape(name);
-    const sEmail = sanitizer.escape(email);
-    const sPhone = sanitizer.escape(phone);
+      //sanitizing
+      const sName = sanitizer.escape(name);
+      const sEmail = sanitizer.escape(email);
+      const sPhone = sanitizer.escape(phone);
 
-    const newCustomer = new Customer({
-      name: sName,
-      email: sEmail,
-      phone: sPhone,
-    });
+    if(typeof JSON.stringify(sName) === "undefined" || typeof JSON.stringify(sEmail) === "undefined" || typeof JSON.stringify(sPhone) === "undefined"){
+      
+      res.json("All values must be entered");
+      
+    }else {
 
-    //Mongoose Save Funtktion to save data
-    newCustomer.save(error => {
-      if (error) {
-        console.error(error);
-        res.json("error");
-      }else {
-        res.json("Customer added");
-      }
+      const newCustomer = new Customer({
+        name: sName,
+        email: sEmail,
+        phone: sPhone,
+      });
 
-    });
+      //Mongoose Save Funtktion to save data
+      newCustomer.save(error => {
+        if (error) {
+          console.error(error);
+          res.json("error");
+        }else {
+          res.json("Customer added");
+        }
+
+      });
+    }
+
+   
 
   });
 
