@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 const program = require('commander');
-
 //for HTTP request (not fetch API)
 var request = require('request');
-
+//password hashing module/middleware
+var bcrypt = require('bcrypt');
 //for fetch API
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-
 //local storage
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require('node-localstorage').LocalStorage;
@@ -23,12 +22,46 @@ program
 
 
   /**
+   * Register
+   */
+  program
+  .command('register')
+  .alias('r')
+  .description('cust register <username> <password>')
+  .action((a) => {
+
+    // process.argv.forEach(function (val, index, array) {
+    //   console.log(index + ': ' + val);
+    //   console.log(array.length);
+    // });
+
+    //first arg
+    // console.log(process.argv[3]);
+    const username = process.argv[3];
+    const password = process.argv[4];
+
+
+    request.post(
+        "http://localhost:8080/api/register",
+        { json: { username: username, password: password } },
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log("User registered");
+            }else {
+                console.log("Something went wrong");
+            }
+        }
+    );
+
+  });
+
+  /**
    * LOGIN
    */
   program
   .command('login')
   .alias('l')
-  .description('User login')
+  .description('cust login <username> <password>')
   .action((a) => {
 
     // process.argv.forEach(function (val, index, array) {
@@ -46,12 +79,37 @@ program
         "http://localhost:8080/api/authenticate",
         { json: { username: username, password: password } },
         function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                console.log(body.token);
+            if (!error && response.statusCode == 200 && typeof body.token !== 'undefined') {
                 localStorage.setItem("token", body.token);
                 console.log("You're successfully logged in");
             }else {
                 console.log("Wrong username and password");
+            }
+        }
+    );
+
+  });
+
+
+  /**
+   * LOGOUT
+   */
+  program
+  .command('logout')
+  .alias('lo')
+  .description('cust logout')
+  .action((a) => {
+
+    request.post(
+        "http://localhost:8080/api/deauthenticate",
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+              localStorage.setItem("token", "");
+              console.log("You have been logged out");
+                // localStorage.setItem("token", body.token);
+                // console.log("You're successfully logged in");
+            }else {
+                console.log("You're not logged in");
             }
         }
     );
@@ -66,7 +124,7 @@ program
   program
   .command('list')
   .alias('l')
-  .description('List customers')
+  .description('cust list')
   .action(() => {
     // prompt(questions).then(answers => addCustomer(answers));
     // 
@@ -116,7 +174,7 @@ program
   program
   .command('add')
   .alias('a')
-  .description('Add customer')
+  .description('cust add <name> <email> <phone>')
   .action((a) => {
 
     // process.argv.forEach(function (val, index, array) {
@@ -152,7 +210,7 @@ program
   program
   .command('search')
   .alias('s')
-  .description('Searches for customers')
+  .description('cust search <keyword>')
   .action((searchTerm) => {
     // prompt(questions).then(answers => addCustomer(answers));
     // 

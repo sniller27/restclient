@@ -1,45 +1,110 @@
 var path = require('path');
+//sanitizing for security
 var sanitizer = require('sanitizer');
+//for webtokens
 var jwt    = require('jsonwebtoken'); 
-
-
+//password hashing module/middleware
+var bcrypt = require('bcrypt');
+//models
 var Customer = require('../model/customermodel.js');
-
-
+var Login = require('../model/loginmodel.js');
 
 
 module.exports = function (app) {
 
-  app.set('superSecret', "bananmad");
+  app.set('superSecret', process.env.tokensecret);
+
+  //REGISTER NEW USER
+  app.post('/api/register', function(req, res){
+
+    //sanitizing
+    var sUsername = sanitizer.escape(req.body.username);
+    var sPassword = sanitizer.escape(req.body.password);
+
+    //set salt and generate hash
+    const saltRounds = 10;
+
+    bcrypt.hash(sPassword, saltRounds, function(err, hash) {
+      
+      var newUser = new Login({
+        // id: 4,
+        username: sUsername,
+        password: hash,
+        
+      });
+
+      //Mongoose Save Function to save data
+      newUser.save(function(error) {
+        if (error) {
+          console.error(error);
+          res.json("error");
+        }else {
+          res.json("User registered");
+        }
+      });
+
+    });
+
+  });
 
   //INSERT NEW ARTIST (POST)
   app.post('/api/authenticate', function(req, res){
 
-    // create a token
-        var payload = {
-          admin: true 
-        };
-        var token = jwt.sign(payload, app.get('superSecret'), {
-          expiresIn: 30 // expires in 24 hours
+    //sanitizing
+    var sUsername = sanitizer.escape(req.body.username);
+
+    Login.findOne({'username' : sUsername}, function(err, user) {
+      console.log("inside");
+      console.log(user);
+      if (err) throw err;
+
+      if(user){
+
+        //sanitizing
+        var sPassword = sanitizer.escape(req.body.password);
+
+        bcrypt.compare(sPassword, user.password, function(err, valid) {
+
+          if (valid) {
+          
+          // create a token
+          var payload = {
+            admin: true 
+          };
+
+          var token = jwt.sign(payload, app.get('superSecret'), {
+            expiresIn: 30
+          });
+
+          res.json({
+            success: true,
+            message: 'Enjoy your token!',
+            token: token
+          });
+          
+          } else {
+            res.json("nope");
+          }
+
         });
 
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token
-        });
+      }else {
+        res.json("meh");
+      }
+
+    });
 
     // res.json("post");
-
   });
 
   //route middleware to authenticate and check token
   app.use(function(req, res, next) {
 
-    console.log("TOEKN");
+  //sanitizing
+  var sToken = sanitizer.escape(req.body.token);
 
   // check header or url parameters or post parameters for token
-  var token = req.body.token || req.headers['x-access-token'];
+  var token = sToken || req.headers['x-access-token'];
 
   // decode token
   if (token) {
@@ -47,7 +112,7 @@ module.exports = function (app) {
     // verifies secret and checks exp
     jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
       if (err) {
-        console.log(err);
+        // console.log(err);
         //return res.json({ success: false, message: 'Failed to authenticate token.' });    
         return res.json("Your session has expired");
       } else {
@@ -81,11 +146,13 @@ module.exports = function (app) {
 
   //READ ALL ARTISTS (GET)
   app.get('/api/artists', function(req, res){
-    console.log(req.body.keyword);
+    
+    //sanitizing
+    var sKeyword = sanitizer.escape(req.body.keyword);
 
   // var nameparameter = req.query.name;
   // var nameparametersanitized = sanitizer.escape(nameparameter);
-    Customer.find({'name' : new RegExp(req.body.keyword, 'i')}, function(err, users) {
+    Customer.find({'name' : new RegExp(sKeyword, 'i')}, function(err, users) {
       if (err) throw err;
 
       res.json(users);
@@ -95,36 +162,20 @@ module.exports = function (app) {
 
   });
 
-  //READ SPECIFIC ARTISTS (GET)
-  app.get('/api/artist', function(req, res){
-  // var nameparameter = req.query.name;
-  // // console.log(nameparameter);
-  // var nameparametersanitized = sanitizer.escape(nameparameter);
-  //   Artist.find({'name' : new RegExp(nameparametersanitized, 'i')}, function(err, users) {
-  //     if (err) throw err;
-
-  //     res.json(users);
-  //   });
-  
-  res.json("lol2");
-
-  });
-
-  //INSERT NEW ARTIST (POST)
+  //INSERT CUSTOMER
   app.post('/api/artist', function(req, res){
 
-    // res.send(req.body);
-  console.log("inside post artist");
-    // //sanitizing
-    // var sanitizename = sanitizer.escape(req.body.name);
-    // var sanitizebplace = sanitizer.escape(req.body.birthPlace);
+    //sanitizing
+    var sName = sanitizer.escape(req.body.name);
+    var sEmail = sanitizer.escape(req.body.email);
+    var sPhone = sanitizer.escape(req.body.phone);
 
     var newCustomer = new Customer({
       // id: 4,
-      name: req.body.name,
-      birthPlace: req.body.email,
-      birthDate: req.body.phone,
-      favoritebool: "gam"
+      name: sName,
+      email: sEmail,
+      phone: sPhone,
+      
     });
     //Mongoose Save Funtktion to save data
     newCustomer.save(function(error) {
@@ -136,42 +187,6 @@ module.exports = function (app) {
       }
     });
 
-    //res.json("Customer added");
-
-  });
-
-  //UPDATE ARTIST (PUT)
-  app.put('/api/artist', function(req, res){
-
-    // res.send(req.body);
-    // var artistid = req.body.selectedid;
-
-    // Artist.update({'id': artistid}, {
-    //     favoritebool: req.body.afavorite
-    // }, function(err, numberAffected, rawResponse) {
-    //    //handle it
-    // });
-
-    res.json("put");
-
-  });
-
-  //DELETE ARTIST
-  app.delete('/api/artist', function(req, res){
-
-    // res.send(req.body);
-    // var delid = req.body.selectedid;
-
-    //  //Mongoose Save Funtktion to save data
-    // Artist.findOneAndRemove({id : delid}, function(error) {
-    //   if (error) {
-    //     console.error(error);
-    //   }
-    // });
-    
-
-    res.json("delete");
-
   });
 
 
@@ -179,16 +194,16 @@ module.exports = function (app) {
  * NULLIFY WEB TOKEN (LOG OUT)
  */
 
-  // app.post('/api/deauthenticate', function(req, res){
+  app.post('/api/deauthenticate', function(req, res){
 
-  //       res.json({
-  //         success: true,
-  //         message: 'Enjoy your token!',
-  //         token: null
-  //       });
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: null
+        });
 
-  //   // res.json("post");
+    // res.json("post");
 
-  // });
+  });
 
 };
