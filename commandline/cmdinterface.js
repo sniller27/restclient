@@ -12,6 +12,8 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   const LocalStorage = require('node-localstorage').LocalStorage;
   localStorage = new LocalStorage('./scratch');
 }
+//config
+const apiconfig = require('../config/apiconfig.js');
 
   program 
   .version('1.0.0')
@@ -21,8 +23,9 @@ if (typeof localStorage === "undefined" || localStorage === null) {
    * Variables
    */
 
-  // const UrlAPI = "http://localhost:8080/api";
-  const UrlAPI = "https://krizorestclient.herokuapp.com/api";
+  const UrlAPI = process.env.NODE_ENV == undefined ? apiconfig.dev.HOST : apiconfig.prod.HOST; 
+  
+
   let feedback;
 
 
