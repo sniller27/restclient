@@ -11,13 +11,10 @@ module.exports = (username, password) => {
       `${UrlAPI}/register`,
       { json: { username: username, password: password } },
       (error, response, body) => {
-          if (!error && response.statusCode == 200) {
-              
-              feedback = body;
-          }else {
-              feedback = "Something went wrong";
-          }
-          console.log(feedback);
+
+        feedback = !error && response.statusCode == 200 ? body : "Something went wrong";
+
+        console.log(feedback);
       }
   );
 

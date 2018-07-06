@@ -11,14 +11,22 @@ module.exports = (username, password) => {
       `${UrlAPI}/authenticate`,
       { json: { username: username, password: password } },
       (error, response, body) => {
-          if (!error && response.statusCode == 200 && typeof body.token !== 'undefined') {
-              localStorage.setItem("token", body.token);
-              feedback = "You're successfully logged in";
-          }else {
-              feedback = "Wrong username and password";
-          }
+
+          feedback = 
+          !error 
+          && response.statusCode == 200 
+          && typeof body.token !== 'undefined' 
+          ? setToken(body) : "Wrong username and password";
+
           console.log(feedback);
+
       }
   );
+
+
+  const setToken = (body) => {
+    localStorage.setItem("token", body.token);
+    return "You're successfully logged in";
+  };
 
 }

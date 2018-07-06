@@ -10,20 +10,23 @@ module.exports = () => {
   request.post(
       `${UrlAPI}/deauthenticate`,
       (error, response, body) => {
-          if (!error && response.statusCode == 200) {
 
-            if(localStorage.getItem("token") == ""){
-              feedback = "You are already logged out";
-            }else {
-              localStorage.setItem("token", "");
-              feedback = "You have been logged out";
-            }
-
-          }else {
-              feedback = "You're not logged in";
-          }
+        feedback = 
+        !error 
+        && response.statusCode == 200 
+        ? (nullifiedTokenCheck()) : "You're not logged in";
+          
           console.log(feedback);
       }
   );
+
+  let nullifiedTokenCheck = (body) => {
+    return localStorage.getItem("token") == "" ? "You are already logged out" : nullifyToken();
+  };
+
+  let nullifyToken = (body) => {
+    localStorage.setItem("token", "");
+    return "You have been logged out";
+  };
 
 }
