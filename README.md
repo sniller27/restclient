@@ -1,14 +1,33 @@
-Node.js console interface communicating with REST-API. Upgraded during project from v4.2.7 (system) to v10.5.0 by using NVM.
+# Node.js REST-client interface
 
-install: npm install
-fix symbolic link: npm link
-start backend: nodemon server.js   ///   node server.js
-for help: cust -h
+## Description
+This is Node.js console interface communicating with REST-API also made in Node.js.
 
-learned:
-ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments, template literals
-Various security middleware used
-Debugging Node.js with node inspector
-Setting token-based authentication
+## Setup
+Install
+```sh
+$ npm install
+```
+Setup symbolic link
+```sh
+$ npm link
+```
+Start application
+```sh
+$ node server.js
+```
+For help instructions about commands
+```sh
+$ cust -h
+```
 
 Link to REST-API: https://krizorestclient.herokuapp.com/
+
+## Personal learning outcome
+* ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments, template literals
+* Various security middleware used
+* Debugging Node.js with node inspector
+* Setting up token-based authentication from scratch
+
+## Notes
+Project upgraded during project from v4.2.7 (system) to v10.5.0 by using NVM.
