@@ -22,8 +22,6 @@ $ cust -h
 
 Link to REST-API: https://krizorestclient.herokuapp.com/
 
-## Commands
-
 
 ## Personal learning outcome
 * ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments, template literals
