@@ -1,3 +1,11 @@
+//sanitizing for security
+const sanitizer = require('sanitizer');
+//password hashing module/middleware
+const bcrypt = require('bcrypt');
+
+//models
+const Login = require('../../model/loginmodel.js');
+
 
 module.exports = (req, res) => {
 
