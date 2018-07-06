@@ -1,6 +1,5 @@
 # Node.js REST-client interface
 
-## Description
 This is Node.js console interface communicating with REST-API also made in Node.js.
 
 ## Setup
