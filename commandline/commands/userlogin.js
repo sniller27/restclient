@@ -2,7 +2,7 @@
 const request = require('request');
 //config
 const apiconfig = require('../../config/apiconfig.js');
-const UrlAPI = apiconfig.dev.HOST;
+const UrlAPI = apiconfig.prod.HOST;
 let feedback;
 
 module.exports = (username, password) => {

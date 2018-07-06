@@ -9,7 +9,7 @@ $ npm install
 ```
 Setup symbolic link
 ```sh
-$ npm link
+$ sudo npm link
 ```
 Start application
 ```sh
@@ -26,7 +26,7 @@ Link to REST-API: https://krizorestclient.herokuapp.com/
 * ES6 features: Block-Scoped Constructs (const & let), arrow functions, destructuring assignments, template literals
 * Various security middleware used
 * Debugging Node.js with node inspector
-* Setting up token-based authentication from scratch
+* Setting up token-based authentication
 
 ## Notes
 Project upgraded during project from v4.2.7 (system) to v10.5.0 by using NVM.
