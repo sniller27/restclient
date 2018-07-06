@@ -13,7 +13,10 @@ module.exports = app => {
 
   app.set('superSecret', process.env.tokensecret);
 
-  //REGISTER NEW USER
+  /**
+   * INSERT NEW USER
+   */
+  
   app.post('/api/register', (req, res) => {
 
     let {username, password} = req.body;
@@ -68,7 +71,10 @@ module.exports = app => {
 
   });
 
-  //INSERT NEW CUSTOMER (POST)
+  /**
+   * AUTHENTICATION
+   */
+  
   app.post('/api/authenticate', (req, res) => {
 
     let {username, password} = req.body;
@@ -153,24 +159,31 @@ module.exports = app => {
   
   });
 
-  //READ ALL CUSTOMERS
+  /**
+   * GET CUSTOMERS
+   */
+  
   app.get('/api/customers', (req, res) => {
-    console.log('halloj');
-    console.log(process.env.NODE_ENV);
+    
     let {keyword} = req.body;
 
     //sanitizing
     const sKeyword = sanitizer.escape(keyword);
 
-    Customer.find({'name' : new RegExp(sKeyword, 'i')}, (err, users) => {
-      if (err) throw err;
+    //query with mongoose
+    var query = Customer.find({'name' : new RegExp(sKeyword, 'i')}).select({"_id": 0, "phone": 1, "email": 2, "name": 3});
 
-      res.json(users);
+    query.exec((err, someValue) => {
+        if (err) return next(err);
+        res.json(someValue);
     });
 
   });
 
-  //INSERT CUSTOMER
+  /**
+   * INSERT CUSTOMER
+   */
+  
   app.post('/api/customer', (req, res) => {
 
       let {name, email, phone} = req.body;
@@ -209,7 +222,7 @@ module.exports = app => {
   });
 
  /**
- * NULLIFY WEB TOKEN (LOG OUT)
+ * NULLIFY WEB TOKEN (LOG OUT/DEAUTHENTICATION)
  */
 
   app.post('/api/deauthenticate', (req, res) => {
