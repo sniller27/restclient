@@ -76,11 +76,7 @@ const server = http.createServer(app);
 
 server.listen(PORT, error => {
 
-  if (error) {
-    console.error(error);
-  } else {
-	console.log("Server listening on: http://localhost:%s", PORT);
-  }
+  error ? console.log(error) : console.log("Server listening on: http://localhost:%s", PORT);
 
 });
 

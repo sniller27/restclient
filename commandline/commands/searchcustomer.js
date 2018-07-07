@@ -19,6 +19,12 @@ module.exports = (searchTerm) => {
       }
   );
 
+  /**
+   * Returns data if its received otherwise error
+   * @param  {object} body received data about users
+   * @return {string/object}      return object if data is received otherwise string
+   */
+  
   let checkResults = (body) => {
     return (body.length == 0) ? "No results found" : body;
   };

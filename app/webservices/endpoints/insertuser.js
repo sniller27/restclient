@@ -10,8 +10,12 @@ const Login = require('../../model/loginmodel.js');
 module.exports = (req, res) => {
 
   /**
-   * Functions
+   * Uses bcrypt algorithm to turn received password into a hash and inserts/saves new user with recevied data
+   * @param  {string} sUsername received username sanitized
+   * @param  {string} sPassword received password sanitized
+   * @return {string}           return error or success json string
    */
+  
   let insertNewUser = (sUsername, sPassword) => {
     
     //set salt and generate hash
@@ -34,6 +38,13 @@ module.exports = (req, res) => {
       });
   };
   
+  /**
+   * Checks if received username already exists before inserting/saving new user
+   * @param  {string} username received username
+   * @param  {string} password received password
+   * @return {string/function}          return json string error or function that inserts/saves new user
+   */
+  
   let insertUserCheck = (username, password) => {
 
       //sanitizing
@@ -49,7 +60,6 @@ module.exports = (req, res) => {
     });
 
   };
-
 
   let {username, password} = req.body;
 

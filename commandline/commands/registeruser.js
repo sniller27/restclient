@@ -13,8 +13,8 @@ module.exports = (username, password) => {
       (error, response, body) => {
 
         feedback = !error && response.statusCode == 200 ? body : "Something went wrong";
-
         console.log(feedback);
+        
       }
   );
 

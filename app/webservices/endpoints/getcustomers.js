@@ -15,8 +15,7 @@ module.exports = (req, res) => {
   var query = Customer.find({'name' : new RegExp(sKeyword, 'i')}).select({"_id": 0, "phone": 1, "email": 2, "name": 3});
 
   query.exec((err, someValue) => {
-      if (err) return next(err);
-      res.json(someValue);
+      err ? next(err) : res.json(someValue);
   });
   
 };
