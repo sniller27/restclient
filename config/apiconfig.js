@@ -9,6 +9,9 @@ apiconfig = {
 
 	    HOST : 'https://krizorestclient.herokuapp.com/api'
 	    
+	},
+	current: {
+		HOST : 'http://localhost:8080/api'
 	}
 
 };

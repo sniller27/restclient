@@ -5,6 +5,25 @@ const jwt    = require('jsonwebtoken');
 
 module.exports = (req, res, next, app) => {
 
+  /**
+   * Verifies the validity of a received token
+   * @param  {object}   req  express HTTP request param
+   * @param  {object}   res  express HTTP response param
+   * @param  {Function} next callback argument
+   * @param  {object}   app  express app object
+   * @return {string}        return json error string or new decoded request value
+   */
+  
+  let tokenVerification = (req, res, next, app) => {
+
+    // verifies secret and checks exp
+    jwt.verify(tokenCheck, app.get('superSecret'), (err, decoded) => {
+      err ? res.json({ success: false, message: 'Failed to authenticate token.'}) : req.decoded = decoded;
+        next();
+    });
+
+  };
+
   let {token} = req.body;
 
   //sanitizing
@@ -14,23 +33,6 @@ module.exports = (req, res, next, app) => {
   const tokenCheck = sToken || req.headers['x-access-token'];
 
   // decode token
-  if (tokenCheck) {
-
-    // verifies secret and checks exp
-    jwt.verify(tokenCheck, app.get('superSecret'), (err, decoded) => {      
-      if (err) {
-        //return res.json({ success: false, message: 'Failed to authenticate token.' });    
-        return res.json("Your session has expired");
-      } else {
-        req.decoded = decoded;  
-        next();
-      }
-    });
-
-  } else {
-
-    res.json("You need to login");
-    
-  }
+  tokenCheck ? tokenVerification(req, res, next, app) : res.json("You need to login");
   
 };

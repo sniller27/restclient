@@ -2,7 +2,7 @@
 const request = require('request');
 //config
 const apiconfig = require('../../config/apiconfig.js');
-const UrlAPI = apiconfig.dev.HOST;
+const UrlAPI = apiconfig.current.HOST;
 let feedback;
 
 module.exports = (name, email, phone) => {
@@ -11,12 +11,10 @@ module.exports = (name, email, phone) => {
       `${UrlAPI}/customer`,
       { json: { name: name, email: email, phone: phone, token: localStorage.getItem("token") } },
       (error, response, body) => {
-          if (!error && response.statusCode == 200) {
-              feedback = body;
-          }else {
-              feedback = "Something went wrong!";
-          }
-          console.log(feedback);
+
+        feedback = !error && response.statusCode == 200 ? body : "Something went wrong!";
+        console.log(feedback);
+        
       }
   );
 
