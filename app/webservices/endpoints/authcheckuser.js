@@ -18,14 +18,13 @@ module.exports = (req, res, next, app) => {
 
     // verifies secret and checks exp
     jwt.verify(tokenCheck, app.get('superSecret'), (err, decoded) => {
-      err ? res.json({ success: false, message: 'Failed to authenticate token.'}) : req.decoded = decoded;
-        next();
+      err ? res.json(false) : next();
     });
 
   };
 
   let {token} = req.body;
-
+  
   //sanitizing
   const sToken = sanitizer.escape(token);
 

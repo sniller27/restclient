@@ -3,21 +3,30 @@ const request = require('request');
 //config
 const apiconfig = require('../../config/apiconfig.js');
 const UrlAPI = apiconfig.current.HOST;
-let feedback;
+const rp = require('request-promise');
 
 module.exports = (searchTerm) => {
 
   searchTerm == undefined ? "" : searchTerm;
 
-  request.get(
-      `${UrlAPI}/customers`,
-      { json: { keyword: searchTerm, token: localStorage.getItem("token") } },
-      (error, response, body) => {
+  var options = {
+      method: 'GET',
+      uri: `${UrlAPI}/customers`,
+      body: { 
+        keyword: searchTerm, 
+        token: localStorage.getItem("token") 
+      },
+      json: true
+  };
 
-        !error && response.statusCode == 200 ? console.table(checkResults(body)) : console.log("Something went wrong!");
-          
-      }
-  );
+  /**
+  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
+  * @return {function/string} returns setToken function or error string
+  */
+  const sendRequest = async () => {  
+      let response = await rp(options);
+      let feedback = response ? console.table(checkResults(response)) : console.log("You're not logged in");
+  };
 
   /**
    * Returns data if its received otherwise error
@@ -28,5 +37,7 @@ module.exports = (searchTerm) => {
   let checkResults = (body) => {
     return (body.length == 0) ? "No results found" : body;
   };
+
+  sendRequest();
 
 }

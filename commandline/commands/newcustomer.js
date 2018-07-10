@@ -3,19 +3,32 @@ const request = require('request');
 //config
 const apiconfig = require('../../config/apiconfig.js');
 const UrlAPI = apiconfig.current.HOST;
-let feedback;
+const rp = require('request-promise');
 
 module.exports = (name, email, phone) => {
 
-  request.post(
-      `${UrlAPI}/customer`,
-      { json: { name: name, email: email, phone: phone, token: localStorage.getItem("token") } },
-      (error, response, body) => {
+  var options = {
+      method: 'POST',
+      uri: `${UrlAPI}/customer`,
+      body: { 
+        name: name, 
+        email: email, 
+        phone: phone, 
+        token: localStorage.getItem("token")
+      },
+      json: true
+  };
 
-        feedback = !error && response.statusCode == 200 ? body : "Something went wrong!";
-        console.log(feedback);
-        
-      }
-  );
+  /**
+  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
+  * @return {function/string} returns setToken function or error string
+  */
+  const sendRequest = async () => {  
+      let response = await rp(options);
+      let feedback = response ? response : "Something went wrong";
+      console.log(feedback);
+  };
+
+  sendRequest();
 
 }

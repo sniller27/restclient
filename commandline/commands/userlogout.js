@@ -3,19 +3,24 @@ const request = require('request');
 //config
 const apiconfig = require('../../config/apiconfig.js');
 const UrlAPI = apiconfig.current.HOST;
-let feedback;
+const rp = require('request-promise');
 
 module.exports = () => {
 
-  request.post(
-      `${UrlAPI}/deauthenticate`,
-      (error, response, body) => {
+  var options = {
+      method: 'POST',
+      uri: `${UrlAPI}/deauthenticate`
+  };
 
-        feedback = !error && response.statusCode == 200 ? (nullifiedTokenCheck()) : "You're not logged in";          
-        console.log(feedback);
-        
-      }
-  );
+  /**
+  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
+  * @return {function/string} returns setToken function or error string
+  */
+  const sendRequest = async () => {  
+      let response = await rp(options);
+      let feedback = response ? (nullifiedTokenCheck()) : "You're not logged in";
+      console.log(feedback);
+  };
 
   /**
    * Nullifies token in local storage if token is not already nullified otherwise sends message
@@ -35,5 +40,7 @@ module.exports = () => {
     localStorage.setItem("token", "");
     return "You have been logged out";
   };
+
+  sendRequest();
 
 }
