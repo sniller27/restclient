@@ -19,7 +19,7 @@ module.exports = (username, password) => {
   };
 
   /**
-   * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
+   * Sends a HTTP request. If a token is received the setToken method is called otherwise error string is returned
    * @return {function/string} returns setToken function or error string
    */
   const requestLogin = async () => {  
