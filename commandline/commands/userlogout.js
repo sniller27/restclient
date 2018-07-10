@@ -14,8 +14,8 @@ module.exports = () => {
   };
 
   /**
-  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
-  * @return {function/string} returns setToken function or error string
+  * Sends a HTTP request. If a response is received the nullifiedTokenCheck method is called otherwise error string is returned
+  * @return {function/string} returns nullifiedTokenCheck function or error string
   */
   const requestLogout = async () => {  
       let response = await rp(options);

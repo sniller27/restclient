@@ -19,8 +19,8 @@ module.exports = (username, password) => {
   };
 
   /**
-  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
-  * @return {function/string} returns setToken function or error string
+  * Sends a HTTP request. If a response is received, it will be printed to the client otherwise error string is printed
+  * @return {string} returns confirmation string or error string
   */
   const requestRegisterUser = async () => {  
       let response = await rp(options);

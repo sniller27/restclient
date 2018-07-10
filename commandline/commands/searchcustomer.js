@@ -21,8 +21,8 @@ module.exports = (searchTerm) => {
   };
 
   /**
-  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
-  * @return {function/string} returns setToken function or error string
+  * Sends a HTTP request. If a response is received the checkResults method is called otherwise error string is returned
+  * @return {function/string} returns checkResults function or error string
   */
   const requestCustomers = async () => {  
       let response = await rp(options);
