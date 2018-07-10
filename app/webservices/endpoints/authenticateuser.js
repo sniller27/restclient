@@ -3,7 +3,8 @@ const sanitizer = require('sanitizer');
 //password hashing module/middleware
 const bcrypt = require('bcrypt');
 //for webtokens
-const jwt    = require('jsonwebtoken'); 
+const jwt    = require('jsonwebtoken');
+const strings = require('../../strings/strings.js');
 
 //models
 const Login = require('../../model/loginmodel.js');
@@ -24,7 +25,7 @@ module.exports = (req, res, app) => {
 
     bcrypt.compare(sPassword, user.password, (err, valid) => {
 
-      valid ? createNewToken() : res.json("Wrong username and password");
+      valid ? createNewToken() : res.json(strings.feedback.wrongusernamepassword);
 
     });   
 
@@ -67,7 +68,7 @@ module.exports = (req, res, app) => {
 
     Login.findOne({'username' : sUsername}, (err, user) => {
     
-      user ? checkUserPassword(password, user) : res.json("Username doesn't exist");
+      user ? checkUserPassword(password, user) : res.json(strings.feedback.usernameunexising);
 
     });
 
@@ -79,6 +80,6 @@ module.exports = (req, res, app) => {
   && typeof password == "string" 
   && username.length > 0
   && password.length > 0
-  ? authenticateUser(username, password) : res.json("Missing username and password");  
+  ? authenticateUser(username, password) : res.json(strings.feedback.missingusernamepassword);  
 
 }

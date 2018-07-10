@@ -3,6 +3,8 @@ const sanitizer = require('sanitizer');
 //password hashing module/middleware
 const bcrypt = require('bcrypt');
 
+const strings = require('../../strings/strings.js');
+
 //models
 const Login = require('../../model/loginmodel.js');
 
@@ -31,7 +33,7 @@ module.exports = (req, res) => {
         //Mongoose Save Function to save data
         newUser.save(error => {
 
-          error ? res.json("error") : res.json("User registered");
+          error ? res.json(strings.feedback.errormesssage) : res.json(strings.feedback.userregister);
           
         });
 
@@ -55,7 +57,7 @@ module.exports = (req, res) => {
       
       if (err) throw err;
 
-      user ? res.json("Username is already taken") : insertNewUser(sUsername, sPassword);
+      user ? res.json(strings.feedback.usernametaken) : insertNewUser(sUsername, sPassword);
 
     });
 
@@ -67,6 +69,6 @@ module.exports = (req, res) => {
     && typeof password == "string" 
     && username.length > 0
     && password.length > 0
-    ? insertUserCheck(username, password) : res.json("All values must be entered");
+    ? insertUserCheck(username, password) : res.json(strings.feedback.enterallvalues);
 
 };

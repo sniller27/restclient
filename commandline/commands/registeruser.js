@@ -2,20 +2,32 @@
 const request = require('request');
 //config
 const apiconfig = require('../../config/apiconfig.js');
+const strings = require('../../app/strings/strings.js');
 const UrlAPI = apiconfig.current.HOST;
-let feedback;
+const rp = require('request-promise');
 
 module.exports = (username, password) => {
 
-  request.post(
-      `${UrlAPI}/register`,
-      { json: { username: username, password: password } },
-      (error, response, body) => {
+  let options = {
+      method: 'POST',
+      uri: `${UrlAPI}/register`,
+      body: { 
+        username: username, 
+        password: password
+      },
+      json: true
+  };
 
-        feedback = !error && response.statusCode == 200 ? body : "Something went wrong";
-        console.log(feedback);
-        
-      }
-  );
+  /**
+  * Sends a HTTP request if a token is received the setToken method is called otherwise error string is returned
+  * @return {function/string} returns setToken function or error string
+  */
+  const requestRegisterUser = async () => {  
+      let response = await rp(options);
+      let feedback = response ? response : strings.feedback.suddenerror;
+      console.log(feedback);
+  };
+
+  requestRegisterUser();
 
 }

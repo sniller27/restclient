@@ -12,7 +12,7 @@ module.exports = (req, res) => {
   const sKeyword = sanitizer.escape(keyword);
 
   //query with mongoose
-  var query = Customer.find({'name' : new RegExp(sKeyword, 'i')}).select({"_id": 0, "phone": 1, "email": 2, "name": 3});
+  let query = Customer.find({'name' : new RegExp(sKeyword, 'i')}).select({"_id": 0, "phone": 1, "email": 2, "name": 3});
 
   query.exec((err, someValue) => {
       err ? next(err) : res.json(someValue);

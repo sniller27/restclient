@@ -1,5 +1,6 @@
 //sanitizing for security
 const sanitizer = require('sanitizer');
+const strings = require('../../strings/strings.js');
 
 //models
 const Customer = require('../../model/customermodel.js');
@@ -30,7 +31,7 @@ module.exports = (req, res) => {
     //Mongoose Save Funtktion to save data
     newCustomer.save(error => {
 
-      error ? res.json("error") : res.json("Customer added");
+      error ? res.json(strings.feedback.errormessage) : res.json(strings.feedback.customeradded);
 
     });
 
@@ -44,8 +45,6 @@ module.exports = (req, res) => {
   && name.length > 0
   && email.length > 0
   && phone.length > 0
-  ? insertCustomerCheck(name, email, phone) : res.json("All values must be entered");
-
-
+  ? insertCustomerCheck(name, email, phone) : res.json(strings.feedback.enterallvalues);
   
 };

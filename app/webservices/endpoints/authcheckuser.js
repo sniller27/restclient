@@ -2,6 +2,7 @@
 const sanitizer = require('sanitizer');
 //for webtokens
 const jwt    = require('jsonwebtoken'); 
+const strings = require('../../strings/strings.js');
 
 module.exports = (req, res, next, app) => {
 
@@ -18,14 +19,13 @@ module.exports = (req, res, next, app) => {
 
     // verifies secret and checks exp
     jwt.verify(tokenCheck, app.get('superSecret'), (err, decoded) => {
-      err ? res.json({ success: false, message: 'Failed to authenticate token.'}) : req.decoded = decoded;
-        next();
+      err ? res.json(false) : next();
     });
 
   };
 
   let {token} = req.body;
-
+  
   //sanitizing
   const sToken = sanitizer.escape(token);
 
@@ -33,6 +33,6 @@ module.exports = (req, res, next, app) => {
   const tokenCheck = sToken || req.headers['x-access-token'];
 
   // decode token
-  tokenCheck ? tokenVerification(req, res, next, app) : res.json("You need to login");
+  tokenCheck ? tokenVerification(req, res, next, app) : res.json(strings.feedback.notloggedin);
   
 };
