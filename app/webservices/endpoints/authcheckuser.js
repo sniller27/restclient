@@ -2,6 +2,7 @@
 const sanitizer = require('sanitizer');
 //for webtokens
 const jwt    = require('jsonwebtoken'); 
+const strings = require('../../strings/strings.js');
 
 module.exports = (req, res, next, app) => {
 
@@ -32,6 +33,6 @@ module.exports = (req, res, next, app) => {
   const tokenCheck = sToken || req.headers['x-access-token'];
 
   // decode token
-  tokenCheck ? tokenVerification(req, res, next, app) : res.json("You need to login");
+  tokenCheck ? tokenVerification(req, res, next, app) : res.json(strings.feedback.notloggedin);
   
 };
